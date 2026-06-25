@@ -6,6 +6,7 @@ import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { Avatar } from 'primeng/avatar';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { NavIconComponent } from '../../shared/components/nav-icon/nav-icon.component';
 import {
@@ -26,6 +27,7 @@ import { SidebarStateService } from '../services/sidebar-state.service';
     Button,
     Avatar,
     ScrollPanelModule,
+    TooltipModule,
     NavIconComponent,
   ],
   host: {
@@ -86,6 +88,9 @@ import { SidebarStateService } from '../services/sidebar-state.service';
           severity="secondary"
           styleClass="!size-9 !text-slate-400 hover:!text-white"
           ariaLabel="Search"
+          pTooltip="Search"
+          tooltipPosition="right"
+          [tooltipDisabled]="!sidebar.collapsed()"
         />
       </div>
     }
@@ -116,7 +121,9 @@ import { SidebarStateService } from '../services/sidebar-state.service';
                       class="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
                       [class.justify-center]="sidebar.collapsed()"
                       [class.!px-2]="sidebar.collapsed()"
-                      [attr.title]="sidebar.collapsed() ? item.label : null"
+                      [pTooltip]="item.label"
+                      tooltipPosition="right"
+                      [tooltipDisabled]="!sidebar.collapsed()"
                     >
                       <span
                         class="absolute inset-y-1.5 left-0 w-1 rounded-r-full bg-orange-500 transition-opacity"
@@ -157,7 +164,9 @@ import { SidebarStateService } from '../services/sidebar-state.service';
               class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-400 transition-colors hover:bg-white/5 hover:text-slate-200"
               [class.justify-center]="sidebar.collapsed()"
               [class.!px-2]="sidebar.collapsed()"
-              [attr.title]="sidebar.collapsed() ? link.label : null"
+              [pTooltip]="link.label"
+              tooltipPosition="right"
+              [tooltipDisabled]="!sidebar.collapsed()"
             >
               <app-nav-icon [name]="link.icon" />
               @if (!sidebar.collapsed()) {
@@ -173,6 +182,9 @@ import { SidebarStateService } from '../services/sidebar-state.service';
         class="flex w-full items-center gap-3 rounded-xl border border-white/5 bg-[#1a1d26] p-2.5 text-left transition-colors hover:border-white/10 hover:bg-[#1f2330]"
         [class.justify-center]="sidebar.collapsed()"
         aria-label="Switch store"
+        [pTooltip]="store.name"
+        tooltipPosition="right"
+        [tooltipDisabled]="!sidebar.collapsed()"
       >
         <p-avatar
           [label]="store.initials"
