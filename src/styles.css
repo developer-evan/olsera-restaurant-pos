@@ -81,3 +81,41 @@ body {
 .dark-mode .sidebar-scroll .p-scrollpanel-bar-y {
   width: 4px;
 }
+
+/* Auth form styles */
+.dark-mode .auth-input.p-inputtext,
+.dark-mode .auth-input.p-password-input {
+  border-radius: 0.75rem;
+  border-color: rgb(255 255 255 / 0.08);
+  background: #1a1d26;
+  padding-block: 0.625rem;
+  color: #e2e8f0;
+}
+
+.dark-mode .auth-input.p-inputtext:enabled:focus,
+.dark-mode .auth-input.p-password-input:enabled:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px rgb(249 115 22 / 0.35);
+}
+
+.dark-mode .auth-primary-btn.p-button {
+  justify-content: center;
+  border-radius: 0.75rem;
+  border-color: #f97316;
+  background: #f97316;
+  padding-block: 0.75rem;
+  font-weight: 600;
+}
+
+.dark-mode .auth-primary-btn.p-button:enabled:hover {
+  border-color: #fb923c;
+  background: #fb923c;
+}
+
+.dark-mode .p-password {
+  width: 100%;
+}
+
+.dark-mode .p-password .p-password-toggle-icon {
+  color: #64748b;
+}
