@@ -12,7 +12,7 @@ import { SidebarStateService } from '../services/sidebar-state.service';
   imports: [Button],
   host: {
     class:
-      'sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-white/5 bg-[#0a0b0f]/90 px-4 backdrop-blur-md md:h-16 md:px-6',
+      'sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-white/5 bg-[#0a0b0f]/90 px-4 backdrop-blur-md md:h-17 md:px-3',
   },
   template: `
     <p-button
@@ -24,6 +24,17 @@ import { SidebarStateService } from '../services/sidebar-state.service';
       styleClass="!text-slate-300 hover:!text-white lg:!hidden"
       ariaLabel="Open navigation menu"
       (onClick)="sidebar.toggleMobile()"
+    />
+
+    <p-button
+      type="button"
+      [icon]="sidebar.collapsed() ? 'pi pi-chevron-right' : 'pi pi-align-justify'"
+      [rounded]="true"
+      [text]="true"
+      severity="secondary"
+      styleClass="!hidden !size-9 !text-slate-400 hover:!text-white lg:!inline-flex"
+      [ariaLabel]="sidebar.collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      (onClick)="sidebar.toggleCollapsed()"
     />
 
     <div class="min-w-0 flex-1">

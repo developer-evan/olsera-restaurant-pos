@@ -52,28 +52,6 @@ import { SidebarStateService } from '../services/sidebar-state.service';
 
       @if (!sidebar.collapsed()) {
         <span class="flex-1 text-lg font-semibold tracking-tight text-white">Olsera</span>
-
-        <p-button
-          type="button"
-          icon="pi pi-chevron-left"
-          [rounded]="true"
-          [text]="true"
-          severity="secondary"
-          styleClass="!size-8 !text-slate-400 hover:!text-white hidden lg:inline-flex"
-          ariaLabel="Collapse sidebar"
-          (onClick)="sidebar.toggleCollapsed()"
-        />
-      } @else {
-        <p-button
-          type="button"
-          icon="pi pi-chevron-right"
-          [rounded]="true"
-          [text]="true"
-          severity="secondary"
-          styleClass="!size-8 !text-slate-400 hover:!text-white hidden lg:inline-flex"
-          ariaLabel="Expand sidebar"
-          (onClick)="sidebar.toggleCollapsed()"
-        />
       }
     </div>
 
@@ -87,7 +65,7 @@ import { SidebarStateService } from '../services/sidebar-state.service';
               pInputText
               type="search"
               placeholder="Search"
-              class="w-full !rounded-xl !border-white/5 !bg-[#1a1d26] !py-2.5 !pl-10 !pr-14 !text-sm !text-slate-200 placeholder:!text-slate-500"
+              class="w-full !rounded-xl border-white/5! !bg-[#1a1d26] !py-2.5 !pl-10 !pr-14 !text-sm !text-slate-200 placeholder:!text-slate-500"
               aria-label="Search navigation"
             />
           </p-iconfield>
