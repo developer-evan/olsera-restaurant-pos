@@ -58,3 +58,26 @@ body {
 .dark-mode .p-iconfield .p-inputicon {
   color: #64748b;
 }
+
+.dark-mode .sidebar-scroll.p-scrollpanel {
+  background: transparent;
+  border: none;
+}
+
+.dark-mode .sidebar-scroll .p-scrollpanel-content-container {
+  border: none;
+}
+
+.dark-mode .sidebar-scroll .p-scrollpanel-content {
+  padding: 0;
+  width: 100%;
+}
+
+.dark-mode .sidebar-scroll .p-scrollpanel-bar {
+  background: rgb(255 255 255 / 0.18);
+  border-radius: 9999px;
+}
+
+.dark-mode .sidebar-scroll .p-scrollpanel-bar-y {
+  width: 4px;
+}

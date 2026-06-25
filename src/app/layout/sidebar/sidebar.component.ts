@@ -5,6 +5,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { Avatar } from 'primeng/avatar';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 import { NavIconComponent } from '../../shared/components/nav-icon/nav-icon.component';
 import {
@@ -24,6 +25,7 @@ import { SidebarStateService } from '../services/sidebar-state.service';
     InputText,
     Button,
     Avatar,
+    ScrollPanelModule,
     NavIconComponent,
   ],
   host: {
@@ -111,57 +113,61 @@ import { SidebarStateService } from '../services/sidebar-state.service';
     }
 
     <!-- Navigation -->
-    <nav class="min-h-0 flex-1 overflow-y-auto px-3 pb-4" aria-label="Main navigation">
-      @for (section of navSections; track section.title) {
-        <div class="mb-5">
-          @if (!sidebar.collapsed()) {
-            <p
-              class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500"
-            >
-              {{ section.title }}
-            </p>
-          }
-
-          <ul class="space-y-0.5">
-            @for (item of section.items; track item.route) {
-              <li>
-                <a
-                  [routerLink]="item.route"
-                  routerLinkActive="bg-white/10 text-white"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  #navLink="routerLinkActive"
-                  (click)="onNavigate()"
-                  class="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
-                  [class.justify-center]="sidebar.collapsed()"
-                  [class.!px-2]="sidebar.collapsed()"
-                  [attr.title]="sidebar.collapsed() ? item.label : null"
+    <div class="min-h-0 flex-1">
+      <p-scrollpanel styleClass="sidebar-scroll h-full w-full">
+        <nav class="px-3 pb-4" aria-label="Main navigation">
+          @for (section of navSections; track section.title) {
+            <div class="mb-5">
+              @if (!sidebar.collapsed()) {
+                <p
+                  class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500"
                 >
-                  <span
-                    class="absolute inset-y-1.5 left-0 w-1 rounded-r-full bg-orange-500 transition-opacity"
-                    [class.opacity-0]="!navLink.isActive"
-                    [class.opacity-100]="navLink.isActive"
-                    aria-hidden="true"
-                  ></span>
+                  {{ section.title }}
+                </p>
+              }
 
-                  <app-nav-icon [name]="item.icon" [active]="navLink.isActive" />
-
-                  @if (!sidebar.collapsed()) {
-                    <span class="flex-1 truncate">{{ item.label }}</span>
-
-                    @if (item.hasChildren) {
-                      <i
-                        class="pi pi-chevron-down text-xs text-slate-500"
+              <ul class="space-y-0.5">
+                @for (item of section.items; track item.route) {
+                  <li>
+                    <a
+                      [routerLink]="item.route"
+                      routerLinkActive="bg-white/10 text-white"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      #navLink="routerLinkActive"
+                      (click)="onNavigate()"
+                      class="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
+                      [class.justify-center]="sidebar.collapsed()"
+                      [class.!px-2]="sidebar.collapsed()"
+                      [attr.title]="sidebar.collapsed() ? item.label : null"
+                    >
+                      <span
+                        class="absolute inset-y-1.5 left-0 w-1 rounded-r-full bg-orange-500 transition-opacity"
+                        [class.opacity-0]="!navLink.isActive"
+                        [class.opacity-100]="navLink.isActive"
                         aria-hidden="true"
-                      ></i>
-                    }
-                  }
-                </a>
-              </li>
-            }
-          </ul>
-        </div>
-      }
-    </nav>
+                      ></span>
+
+                      <app-nav-icon [name]="item.icon" [active]="navLink.isActive" />
+
+                      @if (!sidebar.collapsed()) {
+                        <span class="flex-1 truncate">{{ item.label }}</span>
+
+                        @if (item.hasChildren) {
+                          <i
+                            class="pi pi-chevron-down text-xs text-slate-500"
+                            aria-hidden="true"
+                          ></i>
+                        }
+                      }
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </nav>
+      </p-scrollpanel>
+    </div>
 
     <!-- Footer -->
     <div class="mt-auto shrink-0 border-t border-white/5 px-3 py-4">
