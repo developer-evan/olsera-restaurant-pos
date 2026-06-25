@@ -1,3 +1,60 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+@import 'primeicons/primeicons.css';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: #0a0b0f;
+  color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* PrimeNG overrides for dark dashboard shell */
+.dark-mode .p-drawer {
+  border: none;
+  box-shadow: none;
+}
+
+.dark-mode .p-drawer-content {
+  padding: 0;
+  height: 100%;
+}
+
+.dark-mode .p-card {
+  background: #151821;
+  color: #e2e8f0;
+  border-radius: 1rem;
+}
+
+.dark-mode .p-card-body {
+  padding: 1.25rem;
+}
+
+.dark-mode .p-inputtext {
+  background: #1a1d26;
+  border-color: rgb(255 255 255 / 0.08);
+  color: #e2e8f0;
+}
+
+.dark-mode .p-inputtext:enabled:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px rgb(249 115 22 / 0.35);
+}
+
+.dark-mode .p-button.p-button-text {
+  color: #94a3b8;
+}
+
+.dark-mode .p-iconfield .p-inputicon {
+  color: #64748b;
+}

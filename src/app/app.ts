@@ -1,12 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  template: `<router-outlet />`,
+  host: {
+    class: 'dark-mode block min-h-dvh',
+  },
 })
-export class App {
-  protected readonly title = signal('olsera-pos-fe');
-}
+export class App {}
