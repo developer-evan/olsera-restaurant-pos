@@ -31,7 +31,7 @@ import { SidebarStateService } from '../services/sidebar-state.service';
       <aside
         class="hidden shrink-0 border-r border-white/5 transition-[width] duration-200 lg:flex lg:flex-col"
         [class.w-64]="!sidebar.collapsed()"
-        [class.w-[4.75rem]]="sidebar.collapsed()"
+        [class.w-[4.5rem]]="sidebar.collapsed()"
         aria-label="Sidebar"
       >
         <app-sidebar />

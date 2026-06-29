@@ -8,6 +8,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
 
+import { AuthService } from '../../../core/services/auth.service';
 import { AuthSplitLayoutComponent } from '../../../shared/components/auth/auth-split-layout.component';
 
 @Component({
@@ -129,6 +130,7 @@ import { AuthSplitLayoutComponent } from '../../../shared/components/auth/auth-s
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
 
   protected readonly submitting = signal(false);
 
@@ -148,6 +150,7 @@ export class LoginComponent {
 
     // Placeholder until REST auth API is wired up.
     setTimeout(() => {
+      this.auth.login(this.form.controls.rememberMe.value);
       this.submitting.set(false);
       void this.router.navigate(['/overview']);
     }, 600);
