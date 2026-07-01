@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://drainage-disbelief-malt.ngrok-free.dev",
+    "secure": true,
+    "changeOrigin": true,
+    "headers": {
+      "ngrok-skip-browser-warning": "true"
+    }
+  }
+}

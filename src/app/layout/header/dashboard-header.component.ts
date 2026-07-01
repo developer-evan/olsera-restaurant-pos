@@ -5,6 +5,7 @@ import { filter, map, startWith } from 'rxjs';
 import { Button } from 'primeng/button';
 
 import { NAV_SECTIONS } from '../../shared/constants/navigation.constants';
+import { StoreContextService } from '../../core/services/store-context.service';
 import { SidebarStateService } from '../services/sidebar-state.service';
 
 @Component({
@@ -56,19 +57,22 @@ import { SidebarStateService } from '../services/sidebar-state.service';
         styleClass="!text-slate-400 hover:!text-white"
         ariaLabel="Notifications"
       />
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        label="New order"
-        size="small"
-        styleClass="!rounded-xl !border-orange-500 !bg-orange-500 !px-3 hover:!border-orange-400 hover:!bg-orange-400"
-      />
+      @if (storeContext.can('orders:create')) {
+        <p-button
+          type="button"
+          icon="pi pi-plus"
+          label="New order"
+          size="small"
+          styleClass="!rounded-xl !border-orange-500 !bg-orange-500 !px-3 hover:!border-orange-400 hover:!bg-orange-400"
+        />
+      }
     </div>
   `,
 })
 export class DashboardHeaderComponent {
   private readonly router = inject(Router);
   protected readonly sidebar = inject(SidebarStateService);
+  protected readonly storeContext = inject(StoreContextService);
 
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
@@ -81,7 +85,12 @@ export class DashboardHeaderComponent {
 
   protected readonly pageTitle = computed(() => {
     const url = this.currentUrl();
-    const match = NAV_SECTIONS.flatMap((section) => section.items).find(
+    const visibleItems = NAV_SECTIONS.flatMap((section) =>
+      section.items.filter(
+        (item) => !item.permission || this.storeContext.can(item.permission),
+      ),
+    );
+    const match = visibleItems.find(
       (item) => url === item.route || url.startsWith(`${item.route}/`),
     );
     return match?.label ?? 'Overview';

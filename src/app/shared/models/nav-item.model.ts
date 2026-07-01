@@ -15,6 +15,7 @@ export interface NavItem {
   label: string;
   route: string;
   icon: NavIconKey;
+  permission?: string;
   hasChildren?: boolean;
 }
 

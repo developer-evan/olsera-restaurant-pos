@@ -1,14 +1,18 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
+import { Message } from 'primeng/message';
 import { Password } from 'primeng/password';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { StoreContextService } from '../../../core/services/store-context.service';
+import { getApiErrorMessage } from '../../../core/utils/api-error.util';
 import { AuthSplitLayoutComponent } from '../../../shared/components/auth/auth-split-layout.component';
 
 @Component({
@@ -23,6 +27,7 @@ import { AuthSplitLayoutComponent } from '../../../shared/components/auth/auth-s
     Button,
     IconField,
     InputIcon,
+    Message,
   ],
   template: `
     <app-auth-split-layout>
@@ -52,6 +57,10 @@ import { AuthSplitLayoutComponent } from '../../../shared/components/auth/auth-s
             Sign in to manage your store dashboard.
           </p>
         </header>
+
+        @if (errorMessage()) {
+          <p-message severity="error" styleClass="mb-5 w-full" [text]="errorMessage()!" />
+        }
 
         <form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="space-y-2">
@@ -115,13 +124,8 @@ import { AuthSplitLayoutComponent } from '../../../shared/components/auth/auth-s
         </form>
 
         <p class="mt-8 text-center text-sm text-slate-400">
-          Don&apos;t have an account?
-          <a
-            routerLink="/auth/register"
-            class="ml-1 font-medium text-orange-400 transition-colors hover:text-orange-300"
-          >
-            Create one
-          </a>
+          Staff member?
+          <span class="text-slate-500">Use the invite link from your manager to set up access.</span>
         </p>
       </div>
     </app-auth-split-layout>
@@ -131,8 +135,10 @@ export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
+  private readonly storeContext = inject(StoreContextService);
 
   protected readonly submitting = signal(false);
+  protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -146,13 +152,23 @@ export class LoginComponent {
       return;
     }
 
+    this.errorMessage.set(null);
     this.submitting.set(true);
 
-    // Placeholder until REST auth API is wired up.
-    setTimeout(() => {
-      this.auth.login(this.form.controls.rememberMe.value);
-      this.submitting.set(false);
-      void this.router.navigate(['/overview']);
-    }, 600);
+    const { email, password, rememberMe } = this.form.getRawValue();
+
+    this.auth
+      .login({ email, password }, rememberMe)
+      .pipe(switchMap(() => this.storeContext.bootstrap()))
+      .subscribe({
+        next: ({ route }) => {
+          this.submitting.set(false);
+          void this.router.navigate([route]);
+        },
+        error: (error) => {
+          this.submitting.set(false);
+          this.errorMessage.set(getApiErrorMessage(error, 'Invalid email or password'));
+        },
+      });
   }
 }

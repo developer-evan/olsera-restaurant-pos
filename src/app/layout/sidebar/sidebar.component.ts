@@ -1,5 +1,5 @@
-import { Component, inject, output } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, computed, inject, output } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
@@ -12,8 +12,8 @@ import { NavIconComponent } from '../../shared/components/nav-icon/nav-icon.comp
 import {
   FOOTER_LINKS,
   NAV_SECTIONS,
-  STORE_PROFILE,
 } from '../../shared/constants/navigation.constants';
+import { StoreContextService } from '../../core/services/store-context.service';
 import { SidebarStateService } from '../services/sidebar-state.service';
 
 @Component({
@@ -99,7 +99,7 @@ import { SidebarStateService } from '../services/sidebar-state.service';
     <div class="min-h-0 flex-1">
       <p-scrollpanel styleClass="sidebar-scroll h-full w-full">
         <nav class="px-3 pb-4" aria-label="Main navigation">
-          @for (section of navSections; track section.title) {
+          @for (section of navSections(); track section.title) {
             <div class="mb-5">
               @if (!sidebar.collapsed()) {
                 <p
@@ -182,22 +182,27 @@ import { SidebarStateService } from '../services/sidebar-state.service';
         class="flex w-full items-center gap-3 rounded-xl border border-white/5 bg-[#1a1d26] p-2.5 text-left transition-colors hover:border-white/10 hover:bg-[#1f2330]"
         [class.justify-center]="sidebar.collapsed()"
         aria-label="Switch store"
-        [pTooltip]="store.name"
+        [pTooltip]="storeProfile().name"
         tooltipPosition="right"
         [tooltipDisabled]="!sidebar.collapsed()"
+        (click)="onStoreClick()"
       >
         <p-avatar
-          [label]="store.initials"
+          [label]="storeProfile().initials"
           shape="circle"
           styleClass="!size-9 !bg-orange-300/90 !text-sm !font-semibold !text-orange-950"
         />
 
         @if (!sidebar.collapsed()) {
           <span class="min-w-0 flex-1">
-            <span class="block text-[11px] text-slate-500">{{ store.label }}</span>
-            <span class="block truncate text-sm font-semibold text-white">{{ store.name }}</span>
+            <span class="block text-[11px] text-slate-500">{{ storeProfile().label }}</span>
+            <span class="block truncate text-sm font-semibold text-white">{{
+              storeProfile().name
+            }}</span>
           </span>
-          <i class="pi pi-sort text-xs text-slate-500" aria-hidden="true"></i>
+          @if (storeContext.hasMultipleStores()) {
+            <i class="pi pi-sort text-xs text-slate-500" aria-hidden="true"></i>
+          }
         }
       </button>
     </div>
@@ -205,13 +210,32 @@ import { SidebarStateService } from '../services/sidebar-state.service';
 })
 export class SidebarComponent {
   protected readonly sidebar = inject(SidebarStateService);
-  protected readonly navSections = NAV_SECTIONS;
+  protected readonly storeContext = inject(StoreContextService);
+  private readonly router = inject(Router);
   protected readonly footerLinks = FOOTER_LINKS;
-  protected readonly store = STORE_PROFILE;
+
+  protected readonly navSections = computed(() =>
+    NAV_SECTIONS.map((section) => ({
+      ...section,
+      items: section.items.filter(
+        (item) => !item.permission || this.storeContext.can(item.permission),
+      ),
+    })).filter((section) => section.items.length > 0),
+  );
+
+  protected readonly storeProfile = this.storeContext.activeStoreProfile;
 
   readonly navigated = output<void>();
 
   protected onNavigate(): void {
     this.navigated.emit();
+  }
+
+  protected onStoreClick(): void {
+    if (!this.storeContext.hasMultipleStores()) {
+      return;
+    }
+
+    void this.router.navigate(['/select-store']);
   }
 }
